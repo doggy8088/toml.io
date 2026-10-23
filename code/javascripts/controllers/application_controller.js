@@ -29,6 +29,7 @@ export default class extends Controller {
       this.languageTargets.every(target => {
         if (target.dataset['language'] === this.currentLanguage) {
           this.languagesLinkTarget.textContent = target.textContent
+          this.languagesLinkTarget.lang = target.lang
           return false
         }
         return true
