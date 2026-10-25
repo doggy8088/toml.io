@@ -12,8 +12,9 @@ The public facing site at https://toml.io
 ## Deployment
 
 The site is published to GitHub Pages at <https://toml.gh.miniasp.com> by
-`.github/workflows/pages.yml`. Pushes to the default branch (or `main`) build
-the site and deploy the `publish` directory.
+`.github/workflows/pages.yml`. Pushes to the repository's default branch build
+the site and deploy the `publish` directory. The workflow can also be run
+manually from the Actions tab.
 
 The custom domain requires this DNS record:
 
