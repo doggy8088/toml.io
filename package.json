@@ -2,12 +2,13 @@
   "name": "toml.io",
   "version": "1.0.0",
   "scripts": {
-    "build": "$npm_execpath spec_to_html && webpack && postcss --verbose code/stylesheets/application.pcss -o publish/stylesheets/application.css",
+    "build": "$npm_execpath spec_to_html && webpack && postcss --verbose code/stylesheets/application.pcss -o publish/stylesheets/application.css && $npm_execpath pages_redirects",
     "clean": "del 'publish/!(images|favicon.*)' 'code/html/!(layouts|*.template|404.html)'",
     "dev": "$npm_execpath serve & $npm_execpath watch",
     "netlify": "$npm_execpath watch & netlify dev",
     "serve": "live-server --watch=./publish --mount=/:./publish --entry-file='publish/404.html'",
     "spec_to_html": "node lib/spec_to_html.js",
+    "pages_redirects": "node lib/pages_redirects.js",
     "rebuild": "$npm_execpath clean && $npm_execpath build",
     "watch": "webpack --watch & postcss --verbose code/stylesheets/application.pcss -o publish/stylesheets/application.css --watch"
   },

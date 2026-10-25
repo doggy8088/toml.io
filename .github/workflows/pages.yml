@@ -1,0 +1,67 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    # `feat/add-zh-tw-locale` is the default branch; `main` is kept so
+    # deployment continues after merging.
+    branches:
+      - feat/add-zh-tw-locale
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install Yarn
+        run: npm install --global yarn@1.22.22
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile --non-interactive
+
+      - name: Build site
+        run: yarn build
+        env:
+          # webpack 4 uses MD4, which OpenSSL 3 (Node 17+) disables by default
+          NODE_OPTIONS: --openssl-legacy-provider
+
+      - name: Add GitHub Pages files
+        run: |
+          echo "toml.gh.miniasp.com" > publish/CNAME
+          touch publish/.nojekyll
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: publish
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
